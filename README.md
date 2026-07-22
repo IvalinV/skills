@@ -41,6 +41,25 @@ Forces Claude to answer Laravel / PHP / JS package questions from authoritative 
 
 See [`answer-after-research/SKILL.md`](answer-after-research/SKILL.md) for the full skill definition.
 
+### `consult-me`
+
+Enforces a propose-first gate on code changes. Research and diagnosis run freely, but the moment Claude would *change* anything, it stops and puts a four-part proposal (approach, evidence, scope, uncertainties) in front of you and waits for your go-ahead. This is the default for every change, not a mode you have to turn on.
+
+**Triggers on:**
+
+- Being about to change code, propose a solution, or act on research findings — before any `Edit` / `Write` / `NotebookEdit`, mutating command, or commit
+- Warning signs like "the fix is obvious", "I'll just make the change and explain it", or adding a "design note for review" after already editing
+
+**What it does:**
+
+1. Gates all changing actions (file edits, migrations, commits, deletes) behind your explicit approval
+2. Keeps reading, searching, and read-only analysis always allowed — that's how the proposal gets built
+3. Requires a four-part proposal before editing: approach (with tradeoffs), evidence cited as `file:line`, scope, and uncertainties
+4. Supports a "user is driving" mode where Claude advises on your edits without taking over
+5. Names the common rationalizations for skipping the gate and treats each as a signal to stop and propose
+
+See [`consult-me/SKILL.md`](consult-me/SKILL.md) for the full skill definition.
+
 ## Why these skills exist
 
 The two failure modes these skills target:
