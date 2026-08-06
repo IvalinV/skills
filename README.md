@@ -60,13 +60,35 @@ Enforces a propose-first gate on code changes. Research and diagnosis run freely
 
 See [`consult-me/SKILL.md`](consult-me/SKILL.md) for the full skill definition.
 
+### `step-back`
+
+Turns any halt phrase into an immediate stop plus a structured recap you can course-correct from. Work ceases before the next action rather than after it, and the session stays held — across every following turn — until you explicitly tell it to act again.
+
+**Triggers on:**
+
+- *"step back"*, *"take a break"*, *"hold on"*, *"hang on"*, *"wait"*, *"stop"*, *"pause"*, *"slow down"*, *"let's think"*, *"time out"* — including as a mid-turn message arriving between tool calls
+- Any signal that the current approach is wrong, or that you want to interrupt before the next step lands
+- Ambiguity resolves toward halting: if it is unclear whether the phrase was aimed at Claude, it halts anyway
+
+**What it does:**
+
+1. Stops before the next action — no edits, no state-changing commands, no new subagents, no continuing to the next planned step, even when one line from done
+2. Requires `git status` / `git diff --stat` before describing state, so the recap reports the working tree rather than what Claude remembers doing
+3. Returns a fixed five-part recap: where it stopped, what changed, **what it assumed without your approval**, what it was about to do next, and what it is least confident about
+4. Holds the session until an instruction to act — agreeing with the recap, answering a question, or approving an *approach* does not resume work
+5. Never reverts, stashes, or tidies on its own initiative; reverting is offered, never performed unprompted
+
+See [`step-back/SKILL.md`](step-back/SKILL.md) for the full skill definition.
+
 ## Why these skills exist
 
-The two failure modes these skills target:
+The three failure modes these skills target:
 
 **Drift from memory.** Frameworks and packages change. An answer that was correct against Laravel 10 may quietly mislead on Laravel 11. `answer-after-research` removes the temptation to answer from training data when the actual docs and source are right there in the project.
 
 **Plausible-sounding fabrication.** "I believe the method accepts a callback" is the kind of statement that wastes an afternoon. Verify-or-don't-answer is cheaper than debugging a hallucinated API.
+
+**Momentum past the point of usefulness.** Saying "hold on" reliably stops an agent, but what comes back is a progress report — not the decisions it made on your behalf or the things it never verified. `step-back` makes those two the centre of the recap, and keeps the session held afterward instead of drifting back into work.
 
 ## Adding your own skills
 
