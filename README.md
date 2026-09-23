@@ -80,15 +80,31 @@ Turns any halt phrase into an immediate stop plus a structured recap you can cou
 
 See [`step-back/SKILL.md`](step-back/SKILL.md) for the full skill definition.
 
+### `backtracking-workflow`
+
+Forces a structured backtracking checkpoint when a task grows beyond its original scope, repeated attempts start circling, a major phase is reached, or the user says *"back track"* or *"backtrack"*. Work pauses until the user agrees on a clear plan for continuing.
+
+**What it does:**
+
+1. Stops edits and implementation while the agent re-reads the original request, constraints, approved decisions, and current repository state
+2. Audits existing changes and classifies them as `keep`, `adapt`, `defer`, or `harmful`
+3. Preserves useful work and distinguishes verified repository facts from unverified claims
+4. Reports the original requirements, current state, missed or conflicting items, and an ordered forward plan
+5. Requires explicit user approval before continuing, and separate explicit approval before removing or rewriting harmful changes
+
+See [`backtracking-workflow/SKILL.md`](backtracking-workflow/SKILL.md) for the full skill definition.
+
 ## Why these skills exist
 
-The three failure modes these skills target:
+The four failure modes these skills target:
 
 **Drift from memory.** Frameworks and packages change. An answer that was correct against Laravel 10 may quietly mislead on Laravel 11. `answer-after-research` removes the temptation to answer from training data when the actual docs and source are right there in the project.
 
 **Plausible-sounding fabrication.** "I believe the method accepts a callback" is the kind of statement that wastes an afternoon. Verify-or-don't-answer is cheaper than debugging a hallucinated API.
 
 **Momentum past the point of usefulness.** Saying "hold on" reliably stops an agent, but what comes back is a progress report — not the decisions it made on your behalf or the things it never verified. `step-back` makes those two the centre of the recap, and keeps the session held afterward instead of drifting back into work.
+
+**Circular work and scope drift.** Larger changes can accumulate partial fixes while the agent loses track of the original request or approved plan. `backtracking-workflow` makes the agent re-read the prompt, audit existing changes for forward value, and obtain approval for a clear continuation plan before more work proceeds.
 
 ## Adding your own skills
 
