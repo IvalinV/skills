@@ -41,6 +41,20 @@ Forces Claude to answer Laravel / PHP / JS package questions from authoritative 
 
 See [`answer-after-research/SKILL.md`](answer-after-research/SKILL.md) for the full skill definition.
 
+### `backtracking-workflow`
+
+Forces a structured backtracking checkpoint when a task grows beyond its original scope, repeated attempts start circling, a major phase is reached, or the user says *"back track"* or *"backtrack"*. Work pauses until the user agrees on a clear plan for continuing.
+
+**What it does:**
+
+1. Stops edits and implementation while the agent re-reads the original request, constraints, approved decisions, and current repository state
+2. Audits existing changes and classifies them as `keep`, `adapt`, `defer`, or `harmful`
+3. Preserves useful work and distinguishes verified repository facts from unverified claims
+4. Reports the original requirements, current state, missed or conflicting items, and an ordered forward plan
+5. Requires explicit user approval before continuing, and separate explicit approval before removing or rewriting harmful changes
+
+See [`backtracking-workflow/SKILL.md`](backtracking-workflow/SKILL.md) for the full skill definition.
+
 ### `consult-me`
 
 Enforces a propose-first gate on code changes. Research and diagnosis run freely, but the moment Claude would *change* anything, it stops and puts a four-part proposal (approach, evidence, scope, uncertainties) in front of you and waits for your go-ahead. This is the default for every change, not a mode you have to turn on.
@@ -79,20 +93,6 @@ Turns any halt phrase into an immediate stop plus a structured recap you can cou
 5. Never reverts, stashes, or tidies on its own initiative; reverting is offered, never performed unprompted
 
 See [`step-back/SKILL.md`](step-back/SKILL.md) for the full skill definition.
-
-### `backtracking-workflow`
-
-Forces a structured backtracking checkpoint when a task grows beyond its original scope, repeated attempts start circling, a major phase is reached, or the user says *"back track"* or *"backtrack"*. Work pauses until the user agrees on a clear plan for continuing.
-
-**What it does:**
-
-1. Stops edits and implementation while the agent re-reads the original request, constraints, approved decisions, and current repository state
-2. Audits existing changes and classifies them as `keep`, `adapt`, `defer`, or `harmful`
-3. Preserves useful work and distinguishes verified repository facts from unverified claims
-4. Reports the original requirements, current state, missed or conflicting items, and an ordered forward plan
-5. Requires explicit user approval before continuing, and separate explicit approval before removing or rewriting harmful changes
-
-See [`backtracking-workflow/SKILL.md`](backtracking-workflow/SKILL.md) for the full skill definition.
 
 ## Why these skills exist
 
